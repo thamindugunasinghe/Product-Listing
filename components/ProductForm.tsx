@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import AttributeInput from "./AttributeInput"
-import type { Category, Product, ProductAttribute } from "@/lib/types"
+import VariationManager from "./VariationManager"
+import type { Category, Product, ProductAttribute, ProductVariation } from "@/lib/types"
 import { ArrowLeft, Save } from "lucide-react"
 
 interface ProductFormProps {
@@ -20,7 +21,9 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [productName, setProductName] = useState("")
   const [commonAttributes, setCommonAttributes] = useState<ProductAttribute[]>([])
-  const [variationAttributes, setVariationAttributes] = useState<ProductAttribute[]>([])
+  const [variationAttribute, setVariationAttribute] = useState("")
+  const [variationValues, setVariationValues] = useState<string[]>([])
+  const [variations, setVariations] = useState<ProductVariation[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -40,9 +43,11 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
   const handleCategoryChange = (categoryId: string) => {
     const category = categories.find((c) => c._id === categoryId)
     setSelectedCategory(category || null)
-    // Reset attributes when category changes
+    // Reset all form data when category changes
     setCommonAttributes([])
-    setVariationAttributes([])
+    setVariationAttribute("")
+    setVariationValues([])
+    setVariations([])
   }
 
   const handleSave = async () => {
@@ -51,14 +56,20 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
       return
     }
 
+    if (variationAttribute && variationValues.length === 0) {
+      alert("Please add variation values or remove the variation attribute")
+      return
+    }
+
     setLoading(true)
 
     const product: Product = {
-      name: productName,
-      categoryId: selectedCategory._id,
-      categoryName: selectedCategory.categoryName,
-      commonAttributes,
-      variationAttributes,
+      productName: productName,
+      category: selectedCategory.categoryName,
+      Common_Atributes: commonAttributes,
+      variationAttribute: variationAttribute || undefined,
+      variationValues: variationValues.length > 0 ? variationValues : undefined,
+      variations,
     }
 
     try {
@@ -137,30 +148,34 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
           </CardContent>
         </Card>
 
-        {/* Attributes Sections */}
+        {/* Common Attributes */}
         {selectedCategory && (
-          <>
-            <AttributeInput
-              title="Common Attributes"
-              availableAttributes={selectedCategory.attributes}
-              attributes={commonAttributes}
-              onAttributesChange={setCommonAttributes}
-            />
+          <AttributeInput
+            title="Common Attributes"
+            availableAttributes={selectedCategory.attributes}
+            attributes={commonAttributes}
+            onAttributesChange={setCommonAttributes}
+          />
+        )}
 
-            <AttributeInput
-              title="Variation Attributes"
-              availableAttributes={selectedCategory.attributes}
-              attributes={variationAttributes}
-              onAttributesChange={setVariationAttributes}
-            />
-          </>
+        {/* Variation Management */}
+        {selectedCategory && (
+          <VariationManager
+            availableAttributes={selectedCategory.attributes}
+            variationAttribute={variationAttribute}
+            onVariationAttributeChange={setVariationAttribute}
+            variationValues={variationValues}
+            onVariationValuesChange={setVariationValues}
+            variations={variations}
+            onVariationsChange={setVariations}
+          />
         )}
 
         {!selectedCategory && (
           <Card>
             <CardContent className="py-12">
               <div className="text-center text-gray-500">
-                <p>Please select a category to configure product attributes</p>
+                <p>Please select a category to configure product attributes and variations</p>
               </div>
             </CardContent>
           </Card>

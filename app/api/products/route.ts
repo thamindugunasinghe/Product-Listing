@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    // Your actual product data
+    // Your actual product data with the new structure
     const products = [
       {
         _id: "1",
@@ -44,6 +44,8 @@ export async function GET() {
             ],
           },
         ],
+        variationAttribute: "flavor",
+        variationValues: ["Apple", "Blueberry", "Chocolate", "Coffee", "Mango", "Mint", "Passion Fruit", "Strawberry"],
         variations: [
           {
             flavor: "Apple",
@@ -56,6 +58,18 @@ export async function GET() {
             weight: "250g",
             price: "Rs 1350.00",
             image: "https://berloproducts.com/wp-content/uploads/Popping-BOBA-Blueberry-Flavour-250g.webp",
+          },
+          {
+            flavor: "Apple",
+            weight: "500g",
+            price: "Rs 2250.00",
+            image: "https://berloproducts.com/wp-content/uploads/Popping-BOBA-Apple-Flavour-500g.webp",
+          },
+          {
+            flavor: "Blueberry",
+            weight: "500g",
+            price: "Rs 2250.00",
+            image: "https://berloproducts.com/wp-content/uploads/Popping-BOBA-Blueberry-Flavour-500g.webp",
           },
         ],
         createdAt: new Date("2024-01-15"),
@@ -75,18 +89,22 @@ export async function GET() {
             value: ["https://berloproducts.com/wp-content/uploads/Black-Tapioca-Perls.webp"],
           },
         ],
+        variationAttribute: "flavor",
+        variationValues: ["Black", "Cardamom", "Chocolate", "Passion Fruit", "Rose", "Strawberry"],
         variations: [
           {
             flavor: "Black",
             weight: "250g",
             price: "Rs 1000.00",
             image: "https://berloproducts.com/wp-content/uploads/Black-Tapioca-Perls.webp",
+            note: "This package allows you to prepare 10 delicious cups of bubble tea. You'll also receive 10 straws absolutely FREE!",
           },
           {
             flavor: "Cardamom",
             weight: "250g",
             price: "Rs 1000.00",
             image: "https://berloproducts.com/wp-content/uploads/Cardamom-Tapioca-Pearls.webp",
+            note: "This package allows you to prepare 10 delicious cups of bubble tea. You'll also receive 10 straws absolutely FREE!",
           },
         ],
         createdAt: new Date("2024-01-14"),
@@ -165,6 +183,8 @@ export async function GET() {
             ],
           },
         ],
+        variationAttribute: "cupType",
+        variationValues: ["Without Logo", "With Berlo Logo", "With Your Brand Logo"],
         variations: [
           {
             cupType: "Without Logo",
@@ -175,6 +195,10 @@ export async function GET() {
             cupType: "With Berlo Logo",
             price: "Rs 30.00",
             image: "https://berloproducts.com/wp-content/uploads/Drinking-Cup-3.webp",
+          },
+          {
+            cupType: "With Your Brand Logo",
+            note: "Send us your logo. We will contact you within 12 hours.",
           },
         ],
         createdAt: new Date("2024-01-11"),

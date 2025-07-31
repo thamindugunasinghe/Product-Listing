@@ -16,12 +16,17 @@ export interface ProductAttribute {
   type: "String" | "Number" | "Image"
 }
 
+export interface ProductVariation {
+  [key: string]: string | File[]
+}
+
 export interface Product {
   _id?: string
-  name: string
-  categoryId: string
-  categoryName: string
-  commonAttributes: ProductAttribute[]
-  variationAttributes: ProductAttribute[]
+  productName: string
+  category: string
+  Common_Atributes: ProductAttribute[]
+  variationAttribute?: string
+  variationValues?: string[]
+  variations: ProductVariation[]
   createdAt?: Date
 }
