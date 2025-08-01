@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
 import AttributeInput from "./AttributeInput"
 import VariationManager from "./VariationManager"
 import type { Category, Product, ProductAttribute, ProductVariation } from "@/lib/types"
@@ -21,6 +22,7 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [productName, setProductName] = useState("")
   const [commonAttributes, setCommonAttributes] = useState<ProductAttribute[]>([])
+  const [hasVariations, setHasVariations] = useState(false)
   const [variationAttribute, setVariationAttribute] = useState("")
   const [variationValues, setVariationValues] = useState<string[]>([])
   const [variations, setVariations] = useState<ProductVariation[]>([])
@@ -45,9 +47,20 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
     setSelectedCategory(category || null)
     // Reset all form data when category changes
     setCommonAttributes([])
+    setHasVariations(false)
     setVariationAttribute("")
     setVariationValues([])
     setVariations([])
+  }
+
+  const handleVariationToggle = (checked: boolean) => {
+    setHasVariations(checked)
+    if (!checked) {
+      // Reset variation data when toggled off
+      setVariationAttribute("")
+      setVariationValues([])
+      setVariations([])
+    }
   }
 
   const handleSave = async () => {
@@ -56,7 +69,7 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
       return
     }
 
-    if (variationAttribute && variationValues.length === 0) {
+    if (hasVariations && variationAttribute && variationValues.length === 0) {
       alert("Please add variation values or remove the variation attribute")
       return
     }
@@ -67,9 +80,10 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
       productName: productName,
       category: selectedCategory.categoryName,
       Common_Atributes: commonAttributes,
-      variationAttribute: variationAttribute || undefined,
-      variationValues: variationValues.length > 0 ? variationValues : undefined,
-      variations,
+      variation: hasVariations,
+      variationAttribute: hasVariations ? variationAttribute || undefined : undefined,
+      variationValues: hasVariations && variationValues.length > 0 ? variationValues : undefined,
+      variations: hasVariations ? variations : [],
     }
 
     try {
@@ -158,8 +172,32 @@ export default function ProductForm({ onBack, onSave }: ProductFormProps) {
           />
         )}
 
-        {/* Variation Management */}
+        {/* Variation Toggle */}
         {selectedCategory && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Product Variations</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center space-x-2">
+                <Switch id="has-variations" checked={hasVariations} onCheckedChange={handleVariationToggle} />
+                <Label htmlFor="has-variations">
+                  This product has variations (different sizes, colors, flavors, etc.)
+                </Label>
+              </div>
+              {hasVariations && (
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-700">
+                    Variations are enabled. You can now configure different options for this product.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Variation Management - Only show when variations are enabled */}
+        {selectedCategory && hasVariations && (
           <VariationManager
             availableAttributes={selectedCategory.attributes}
             variationAttribute={variationAttribute}

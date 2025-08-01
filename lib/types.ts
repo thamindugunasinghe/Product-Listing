@@ -12,21 +12,26 @@ export interface Category {
 
 export interface ProductAttribute {
   key: string
-  value: string | File[]
+  value: string | string[] | number
   type: "String" | "Number" | "Image"
 }
 
 export interface ProductVariation {
-  [key: string]: string | File[]
+  [key: string]: string | number | undefined
+  price?: string
+  image?: string
+  note?: string
+  weight?: string
 }
 
 export interface Product {
-  _id?: string
+  id?: string
   productName: string
   category: string
   Common_Atributes: ProductAttribute[]
+  variation: boolean
   variationAttribute?: string
   variationValues?: string[]
   variations: ProductVariation[]
-  createdAt?: Date
+  createdAt?: string
 }
