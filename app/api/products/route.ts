@@ -1,8 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Mock database with comprehensive product data
+// Mock database with MongoDB structure
 const products = [
   {
+    _id: {
+      $oid: "688dd9edb14287e588575239",
+    },
     id: "1",
     productName: "Berlo Popping Boba Bubbles",
     category: "Bubble Tea",
@@ -26,9 +29,9 @@ const products = [
         ],
       },
     ],
+    variation: true,
     variationAttribute: "flavor",
     variationValues: ["Apple", "Blueberry", "Chocolate", "Coffee", "Mango", "Mint", "Passion Fruit", "Strawberry"],
-    variation: true,
     variations: [
       {
         flavor: "Apple",
@@ -177,6 +180,9 @@ const products = [
     ],
   },
   {
+    _id: {
+      $oid: "688dd9edb14287e588575240",
+    },
     id: "2",
     productName: "Berlo Tapioca Pearls",
     category: "Bubble Tea",
@@ -237,58 +243,12 @@ const products = [
         image: "https://berloproducts.com/wp-content/uploads/Strawberry-Tapioca-Pearls.webp",
         note: "This package allows you to prepare 10 delicious cups of bubble tea. You'll also receive 10 straws absolutely FREE!",
       },
-      {
-        flavor: "Black",
-        weight: "500g",
-        price: "Rs 1950.00",
-        image: "https://berloproducts.com/wp-content/uploads/Black-Tapioca-Perls.webp",
-        note: "This package allows you to prepare 20 delicious cups of bubble tea. You'll also receive 20 straws absolutely FREE!",
-      },
-      {
-        flavor: "Cardamom",
-        weight: "500g",
-        price: "Rs 1950.00",
-        image: "https://berloproducts.com/wp-content/uploads/Cardamom-Tapioca-Pearls.webp",
-        note: "This package allows you to prepare 20 delicious cups of bubble tea. You'll also receive 20 straws absolutely FREE!",
-      },
-      {
-        flavor: "Chocolate",
-        weight: "500g",
-        price: "Rs 1950.00",
-        image: "https://berloproducts.com/wp-content/uploads/Chocolate-Tapioca-Pearls.webp",
-        note: "This package allows you to prepare 20 delicious cups of bubble tea. You'll also receive 20 straws absolutely FREE!",
-      },
-      {
-        flavor: "Passion Fruit",
-        weight: "500g",
-        price: "Rs 1950.00",
-        image: "https://berloproducts.com/wp-content/uploads/Passion-Fruit-Tapioca-Pearls.webp",
-        note: "This package allows you to prepare 20 delicious cups of bubble tea. You'll also receive 20 straws absolutely FREE!",
-      },
-      {
-        flavor: "Rose",
-        weight: "500g",
-        price: "Rs 1950.00",
-        image: "https://berloproducts.com/wp-content/uploads/Rose-Tapioca-Pearls.webp",
-        note: "This package allows you to prepare 20 delicious cups of bubble tea. You'll also receive 20 straws absolutely FREE!",
-      },
-      {
-        flavor: "Strawberry",
-        weight: "500g",
-        price: "Rs 1000.00",
-        image: "https://berloproducts.com/wp-content/uploads/Strawberry-Tapioca-Pearls.webp",
-        note: "This package allows you to prepare 20 delicious cups of bubble tea. You'll also receive 20 straws absolutely FREE!",
-      },
-      {
-        flavor: "Black",
-        weight: "1 kg",
-        price: "Rs 3800.00",
-        image: "https://berloproducts.com/wp-content/uploads/Black-Tapioca-Perls.webp",
-        note: "This package allows you to prepare 40 delicious cups of bubble tea. You'll also receive 40 straws absolutely FREE!",
-      },
     ],
   },
   {
+    _id: {
+      $oid: "688dd9edb14287e588575241",
+    },
     id: "3",
     productName: "Berlo Instant Tapioca Pearls",
     category: "Bubble Tea",
@@ -318,6 +278,9 @@ const products = [
     ],
   },
   {
+    _id: {
+      $oid: "688dd9edb14287e588575242",
+    },
     id: "4",
     productName: "Berlo Premium Coconut Jelly Cube",
     category: "Coconut Product",
@@ -354,6 +317,9 @@ const products = [
     ],
   },
   {
+    _id: {
+      $oid: "688dd9edb14287e588575243",
+    },
     id: "5",
     productName: "Premium Drinking Cups",
     category: "Accessories",
@@ -405,9 +371,12 @@ export async function POST(request: NextRequest) {
   try {
     const product = await request.json()
 
-    // Add ID and timestamp
+    // Add MongoDB-style ID and timestamp
     const newProduct = {
       ...product,
+      _id: {
+        $oid: new Date().getTime().toString(16) + Math.random().toString(16).substr(2, 8),
+      },
       id: (products.length + 1).toString(),
       createdAt: new Date().toISOString(),
     }

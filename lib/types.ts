@@ -13,7 +13,7 @@ export interface Category {
 export interface ProductAttribute {
   key: string
   value: string | string[] | number
-  type: "String" | "Number" | "Image"
+  type?: "String" | "Number" | "Image"
 }
 
 export interface ProductVariation {
@@ -22,9 +22,15 @@ export interface ProductVariation {
   image?: string
   note?: string
   weight?: string
+  flavor?: string
+  packSize?: string
+  cupType?: string
 }
 
 export interface Product {
+  _id?: {
+    $oid: string
+  }
   id?: string
   productName: string
   category: string
